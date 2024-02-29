@@ -1,0 +1,74 @@
+// made with dbdesigner.net
+Parts {
+	Part_ID integer(3) pk increments
+	Name string(30) unique
+	Quantity integer
+}
+
+Storms {
+	Mars_Year integer
+	Sol integer
+	Mission_subphase string
+	Solar_longitude_Ls float
+	Centroid_longitude float
+	Centroid_latitude float
+	Area float
+	Member_ID string
+	Sequence_ID string >* DamagedParts.Cause_ID
+	Max_latitude float
+	Min_latitude float(3)
+	Confidence_interval integer(3)
+	Missing_data boolean
+}
+
+Sectors {
+	Sector_ID integer(3) pk increments
+	Latitude float
+	Longitude float
+}
+
+Installations {
+	Installation_ID integer(3) pk increments
+	Sector_ID integer *> Sectors.Sector_ID
+	Type_ID integer *> InstallationTypes.Type_ID
+	Name string
+}
+
+InstallationTypes {
+	Type_ID integer(3) pk increments
+	Name string
+}
+
+PartsUsage {
+	Installation_ID integer *>* Installations.Installation_ID
+	Part_ID integer *>* Parts.Part_ID
+}
+
+ConservationSchedule {
+	Task_ID integer pk
+	Staff_ID integer *>* Staff.Staff_ID
+	StartTime datetime
+	EndTime datetime
+}
+
+DamagedParts {
+	Part_ID integer(3) pk *> Parts.Part_ID
+	PresumptedOrReported boolean
+	QueuedTask integer null > ConservationSchedule.Task_ID
+	Cause_ID string
+	Severity int4
+}
+
+Specialities {
+	Speciality_ID integer pk increments
+	Name string(30)
+}
+
+Staff {
+	Staff_ID integer pk increments >* DamagedParts.Cause_ID
+	Name string
+	Surname string
+	Speciality_ID integer *> Specialities.Speciality_ID
+	Traits binary(14)
+}
+
