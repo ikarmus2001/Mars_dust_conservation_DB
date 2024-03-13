@@ -1,9 +1,3 @@
-// made with dbdesigner.net
-Parts {
-	Part_ID integer(3) pk increments
-	Name string(30) unique
-	Quantity integer
-}
 
 Storms {
 	Mars_Year integer
@@ -23,12 +17,14 @@ Storms {
 
 Sectors {
 	Sector_ID integer(3) pk increments
-	Latitude float
-	Longitude float
+	MaxLatitude integer
+	MinLatitude integer
+	MaxLongitude integer
+	MinLongitude integer
 }
 
 Installations {
-	Installation_ID integer(3) pk increments
+	Installation_ID integer(3) pk increments >* PartsUsage.Installation_ID
 	Sector_ID integer *> Sectors.Sector_ID
 	Type_ID integer *> InstallationTypes.Type_ID
 	Name string
@@ -40,8 +36,9 @@ InstallationTypes {
 }
 
 PartsUsage {
-	Installation_ID integer *>* Installations.Installation_ID
-	Part_ID integer *>* Parts.Part_ID
+	Installation_ID integer pk > Installations.Installation_ID
+	Part_ID integer pk >* PartsInternalCodes.Part_ID
+	Internal_ID integer pk > PartsInternalCodes.Internal_ID
 }
 
 ConservationSchedule {
@@ -52,7 +49,8 @@ ConservationSchedule {
 }
 
 DamagedParts {
-	Part_ID integer(3) pk *> Parts.Part_ID
+	Part_ID integer(3) pk *> PartsInternalCodes.Part_ID
+	Internal_ID integer pk > PartsInternalCodes.Internal_ID
 	PresumptedOrReported boolean
 	QueuedTask integer null > ConservationSchedule.Task_ID
 	Cause_ID string
@@ -70,5 +68,15 @@ Staff {
 	Surname string
 	Speciality_ID integer *> Specialities.Speciality_ID
 	Traits binary(14)
+}
+
+PartsInternalCodes {
+	Part_ID integer(3) pk increments *> PartExternalCodes.PartID
+	Internal_ID integer
+}
+
+PartExternalCodes {
+	PartID integer pk increments unique
+	Name string
 }
 
