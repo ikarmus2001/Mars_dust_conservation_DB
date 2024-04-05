@@ -10,6 +10,7 @@
 --DROP TABLE Sectors CASCADE CONSTRAINTS;
 --DROP TABLE Storms CASCADE CONSTRAINTS;
 
+CREATE SEQUENCE seq_Storms START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE seq_InstallationTypes START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE seq_Sectors START WITH 1 INCREMENT BY 1;
 -- CREATE SEQUENCE seq_PartsInternalCodes START WITH 1 INCREMENT BY 1;
@@ -22,6 +23,7 @@ CREATE SEQUENCE seq_ConservationSchedule START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE seq_DamagedParts START WITH 1 INCREMENT BY 1;
 
 CREATE TABLE Storms (
+    Storm_ID NUMBER(11) DEFAULT seq_Storms.NEXTVAL,
     Mars_Year NUMBER(10) NOT NULL,
     Sol VARCHAR2(3) NOT NULL,
     Mission_subphase VARCHAR2(255) NOT NULL,
@@ -34,7 +36,8 @@ CREATE TABLE Storms (
     Max_latitude NUMBER(14,6) NOT NULL,
     Min_latitude NUMBER(14,6) NOT NULL,
     Confidence_interval NUMBER(10) NOT NULL,
-    Missing_data NUMBER(1) NOT NULL
+    Missing_data NUMBER(1) NOT NULL,
+    CONSTRAINT pk_Storms PRIMARY KEY (Storm_ID)
 );
 
 CREATE TABLE InstallationTypes (
@@ -71,7 +74,7 @@ CREATE TABLE Specialities (
 );
 
 CREATE TABLE Staff (
-    Staff_ID NUMBER(10) DEFAULT seq_Staff.NEXTVAL,
+    Staff_ID NUMBER(11) DEFAULT seq_Staff.NEXTVAL,
     Name VARCHAR2(255) NOT NULL,
     Surname VARCHAR2(255) NOT NULL,
     Speciality_ID NUMBER(10) NOT NULL,
@@ -113,7 +116,7 @@ CREATE TABLE DamagedParts (
     Internal_ID NUMBER(10) DEFAULT seq_DamagedParts.NEXTVAL,
     PresumptedOrReported NUMBER(1) NOT NULL,
     QueuedTask NUMBER(10),
-    Cause_ID VARCHAR2(20),
+    Cause_ID VARCHAR(7),
     Severity NUMBER(10) NOT NULL,
     CONSTRAINT pk_DamagedParts PRIMARY KEY (Part_ID, Internal_ID),
     CONSTRAINT fk_DamagedParts_PartsInternalCodes FOREIGN KEY (Part_ID, Internal_ID) REFERENCES PartsInternalCodes(Part_ID, Internal_ID),
