@@ -13,6 +13,8 @@ CREATE OR REPLACE PACKAGE storms_package AS
 
   PROCEDURE ShowDamagedPartsInfo;
 
+  PROCEDURE ShowInstallationsInfo;
+
 	--wyjatek rzucany przy nieudanym dodawaniu instalacji
 	INSTALLATION_ADD_ERROR EXCEPTION;
 
@@ -51,6 +53,20 @@ CREATE OR REPLACE PACKAGE BODY storms_package AS
           DBMS_OUTPUT.PUT_LINE('Damaged Part: ' || PartName || ', Installation: ' || InstallationName);
       END LOOP;
       CLOSE damaged_parts_cursor;
+  END;
+
+  PROCEDURE ShowInstallationsInfo
+  AS
+  BEGIN
+      FOR installation_record IN (
+          SELECT i.Name AS InstallationName, it.Name AS TypeName, s.Sector_ID
+          FROM Installations i, InstallationTypes it, Sectors s
+          WHERE i.Type_ID = it.Type_ID(+)
+              AND i.Sector_ID = s.Sector_ID(+)
+      )
+      LOOP
+          DBMS_OUTPUT.PUT_LINE('Installation: ' || installation_record.InstallationName || ', Type: ' || installation_record.TypeName || ', Sector: ' || installation_record.Sector_ID);
+      END LOOP;
   END;
 
   -- Procedura dodająca nowy wiatr do tabeli wiatrów
@@ -191,4 +207,5 @@ END;
 
 begin
   ShowDamagedPartsInfo();
+	ShowInstallationsInfo();
 end;
