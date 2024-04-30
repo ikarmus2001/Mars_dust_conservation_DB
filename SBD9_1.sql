@@ -11,6 +11,8 @@ CREATE OR REPLACE PACKAGE storms_package AS
     p_name IN VARCHAR2
   );
 
+  PROCEDURE ShowDamagedPartsInfo;
+
 	--wyjatek rzucany przy nieudanym dodawaniu instalacji
 	INSTALLATION_ADD_ERROR EXCEPTION;
 
@@ -28,6 +30,29 @@ END storms_package;
 
 /
 CREATE OR REPLACE PACKAGE BODY storms_package AS
+
+  PROCEDURE ShowDamagedPartsInfo
+  AS
+      CURSOR damaged_parts_cursor IS (
+          SELECT pec.Name as PartName, i.Name AS InstallationName
+          FROM DamagedParts dp
+              LEFT JOIN PartsInternalCodes pic ON dp.Part_ID = pic.Part_ID AND dp.Internal_ID = pic.Internal_ID
+              LEFT JOIN PartExternalCodes pec ON pic.Part_ID = pec.PartID
+              LEFT JOIN PartsUsage pu ON pic.Part_ID = pu.Part_ID AND pic.Internal_ID = pu.Internal_ID
+              LEFT JOIN Installations i ON pu.Installation_ID = i.Installation_ID
+      );
+    PartName PartExternalCodes.Name%TYPE;
+    InstallationName Installations.Name%TYPE;
+  BEGIN
+      OPEN damaged_parts_cursor;
+      LOOP
+          FETCH damaged_parts_cursor INTO PartName, InstallationName;
+          EXIT WHEN damaged_parts_cursor%NOTFOUND;
+          DBMS_OUTPUT.PUT_LINE('Damaged Part: ' || PartName || ', Installation: ' || InstallationName);
+      END LOOP;
+      CLOSE damaged_parts_cursor;
+  END;
+
   -- Procedura dodająca nowy wiatr do tabeli wiatrów
   PROCEDURE add_new_installation(
     p_installation_id IN NUMBER,
@@ -164,3 +189,6 @@ BEGIN
 END;
 /
 
+begin
+  ShowDamagedPartsInfo();
+end;
