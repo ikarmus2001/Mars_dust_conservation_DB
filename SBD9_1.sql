@@ -15,6 +15,8 @@ CREATE OR REPLACE PACKAGE storms_package AS
 
   PROCEDURE ShowInstallationsInfo;
 
+  PROCEDURE ShowConservationSchedule;
+
 	--wyjatek rzucany przy nieudanym dodawaniu instalacji
 	INSTALLATION_ADD_ERROR EXCEPTION;
 
@@ -66,6 +68,20 @@ CREATE OR REPLACE PACKAGE BODY storms_package AS
       )
       LOOP
           DBMS_OUTPUT.PUT_LINE('Installation: ' || installation_record.InstallationName || ', Type: ' || installation_record.TypeName || ', Sector: ' || installation_record.Sector_ID);
+      END LOOP;
+  END;
+
+  PROCEDURE ShowConservationSchedule
+  AS
+  BEGIN
+      FOR schedule_record IN (
+          SELECT cs.Task_ID, s.Name AS StaffName, s.Surname AS StaffSurname, cs.StartTime, cs.EndTime
+          FROM ConservationSchedule cs
+          left join Staff s on s.staff_id = cs.staff_id
+        where cs.endtime = null
+      )
+      LOOP
+          DBMS_OUTPUT.PUT_LINE('Task ID: ' || schedule_record.Task_ID || ', Staff Name: ' || schedule_record.StaffName || ' ' || schedule_record.StaffSurname || ', Start Time: ' || schedule_record.StartTime || ', End Time: ' || schedule_record.EndTime);
       END LOOP;
   END;
 
@@ -208,4 +224,5 @@ END;
 begin
   ShowDamagedPartsInfo();
 	ShowInstallationsInfo();
+  ShowConservationSchedule();
 end;
