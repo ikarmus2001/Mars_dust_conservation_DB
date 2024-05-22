@@ -71,7 +71,7 @@ BEGIN
         );
     end loop;
 END;
-
+/
 
 INSERT INTO Storms VALUES (DEFAULT, 29, 'B01', 1, 120.900, 28.8500, 76.9500, 90356.984, 'B01_001', NULL, 83.2500, 71.3500, 75, 0);
 INSERT INTO Storms VALUES (DEFAULT, 29, 'B01', 2, 121.400, 29.6500, 74.2500, 156925.09, 'B01_001', NULL, 81.9500, 66.8500, 50, 0);
@@ -114,27 +114,6 @@ INSERT INTO Storms VALUES (DEFAULT, 29, 'B02', 1, 135.300, -55.2500, -14.9500, 2
 INSERT INTO Storms VALUES (DEFAULT, 29, 'B02', 1, 135.300, -39.3500, -28.9500, 477812.00, 'B02_010', 'B02_01', -19.3500, -37.3500, 75, 0);
 INSERT INTO Storms VALUES (DEFAULT, 29, 'B02', 2, 135.800, 35.2500, -39.8500, 230865.30, 'B01_016', NULL, -34.6500, -44.9500, 50, 1);
 INSERT INTO Storms VALUES (DEFAULT, 29, 'B02', 2, 135.800, 66.5500, -34.8500, 142513.47, 'B02_004', NULL, -31.3500, -38.5500, 75, 0);
-
-INSERT INTO Sectors (MaxLatitude, MinLatitude, MaxLongitude, MinLongitude) VALUES (45.75, 30.50, 120.25, 100.00);
-INSERT INTO Sectors (MaxLatitude, MinLatitude, MaxLongitude, MinLongitude) VALUES (35.00, 20.25, 95.75, 80.50);
-INSERT INTO Sectors (MaxLatitude, MinLatitude, MaxLongitude, MinLongitude) VALUES (25.50, 10.00, 85.25, 70.00);
-INSERT INTO Sectors (MaxLatitude, MinLatitude, MaxLongitude, MinLongitude) VALUES (15.75, 5.50, 75.00, 60.25);
-INSERT INTO Sectors (MaxLatitude, MinLatitude, MaxLongitude, MinLongitude) VALUES (5.00, -5.25, 65.75, 50.50);
-INSERT INTO Sectors (MaxLatitude, MinLatitude, MaxLongitude, MinLongitude) VALUES (-5.50, -15.75, 55.25, 40.00);
-INSERT INTO Sectors (MaxLatitude, MinLatitude, MaxLongitude, MinLongitude) VALUES (-15.75, -25.50, 45.00, 30.25);
-INSERT INTO Sectors (MaxLatitude, MinLatitude, MaxLongitude, MinLongitude) VALUES (-25.50, -35.00, 35.25, 20.00);
-INSERT INTO Sectors (MaxLatitude, MinLatitude, MaxLongitude, MinLongitude) VALUES (-35.25, -45.75, 25.00, 10.25);
-INSERT INTO Sectors (MaxLatitude, MinLatitude, MaxLongitude, MinLongitude) VALUES (-45.75, -55.25, 15.25, 0.00);
-INSERT INTO Sectors (MaxLatitude, MinLatitude, MaxLongitude, MinLongitude) VALUES (-55.50, -65.75, 5.00, -10.25);
-INSERT INTO Sectors (MaxLatitude, MinLatitude, MaxLongitude, MinLongitude) VALUES (-65.75, -75.50, -5.25, -20.00);
-INSERT INTO Sectors (MaxLatitude, MinLatitude, MaxLongitude, MinLongitude) VALUES (-75.50, -85.00, -15.00, -30.25);
-INSERT INTO Sectors (MaxLatitude, MinLatitude, MaxLongitude, MinLongitude) VALUES (-85.25, -90.00, -25.25, -40.00);
-INSERT INTO Sectors (MaxLatitude, MinLatitude, MaxLongitude, MinLongitude) VALUES (-90.00, -95.50, -35.00, -50.25);
-INSERT INTO Sectors (MaxLatitude, MinLatitude, MaxLongitude, MinLongitude) VALUES (-95.50, -100.00, -45.25, -60.00);
-INSERT INTO Sectors (MaxLatitude, MinLatitude, MaxLongitude, MinLongitude) VALUES (-100.25, -105.75, -55.00, -70.25);
-INSERT INTO Sectors (MaxLatitude, MinLatitude, MaxLongitude, MinLongitude) VALUES (-105.75, -110.50, -65.25, -80.00);
-INSERT INTO Sectors (MaxLatitude, MinLatitude, MaxLongitude, MinLongitude) VALUES (-110.50, -115.00, -75.00, -90.25);
-
 
 INSERT INTO PartsInternalCodes (Part_ID, Internal_ID) VALUES (1, 1001);
 INSERT INTO PartsInternalCodes (Part_ID, Internal_ID) VALUES (2, 1002);
