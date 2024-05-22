@@ -1,18 +1,19 @@
 
 Storms {
+	Storm_ID integer(11) pk increments unique
 	Mars_Year integer
 	Sol integer
-	Mission_subphase string
+	Mission_subphase varchar2
 	Solar_longitude_Ls float
 	Centroid_longitude float
 	Centroid_latitude float
 	Area float
-	Member_ID string
-	Sequence_ID string >* DamagedParts.Cause_ID
+	Member_ID varchar2
+	Sequence_ID varchar2
 	Max_latitude float
 	Min_latitude float(3)
 	Confidence_interval integer(3)
-	Missing_data boolean
+	Missing_data integer(1)
 }
 
 Sectors {
@@ -53,7 +54,7 @@ DamagedParts {
 	Internal_ID integer pk > PartsInternalCodes.Internal_ID
 	PresumptedOrReported boolean
 	QueuedTask integer null > ConservationSchedule.Task_ID
-	Cause_ID string
+	Cause_ID string >* Storms.Storm_ID
 	Severity int4
 }
 
