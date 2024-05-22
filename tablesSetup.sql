@@ -11,13 +11,9 @@
 --DROP TABLE Storms CASCADE CONSTRAINTS;
 
 CREATE SEQUENCE seq_Storms START WITH 1 INCREMENT BY 1;
-CREATE SEQUENCE seq_InstallationTypes START WITH 1 INCREMENT BY 1;
-CREATE SEQUENCE seq_Sectors START WITH 1 INCREMENT BY 1;
--- CREATE SEQUENCE seq_PartsInternalCodes START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE seq_PartExternalCodes START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE seq_Specialities START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE seq_Staff START WITH 1 INCREMENT BY 1;
-CREATE SEQUENCE seq_Installations START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE seq_PartsUsage START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE seq_ConservationSchedule START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE seq_DamagedParts START WITH 1 INCREMENT BY 1;
@@ -40,20 +36,37 @@ CREATE TABLE Storms (
     CONSTRAINT pk_Storms PRIMARY KEY (Storm_ID)
 );
 
-CREATE TABLE InstallationTypes (
-    Type_ID NUMBER(10) DEFAULT seq_InstallationTypes.NEXTVAL,
-    Name VARCHAR2(255) NOT NULL,
-    CONSTRAINT pk_InstallationTypes PRIMARY KEY (Type_ID)
+CREATE OR REPLACE TYPE InstallationType_Obj AS OBJECT (
+    Type_ID NUMBER(10),
+    Name VARCHAR2(255)
 );
+/
+    
+CREATE OR REPLACE TYPE Sector_Obj AS OBJECT(
+    Sector_ID NUMBER(10),
+    MaxLatitude NUMBER(10),
+    MinLatitude NUMBER(10),
+    MaxLongitude NUMBER(10),
+    MinLongitude NUMBER(10)
+);
+/
 
-CREATE TABLE Sectors (
-    Sector_ID NUMBER(10) DEFAULT seq_Sectors.NEXTVAL,
-    MaxLatitude NUMBER(10) NOT NULL,
-    MinLatitude NUMBER(10) NOT NULL,
-    MaxLongitude NUMBER(10) NOT NULL,
-    MinLongitude NUMBER(10) NOT NULL,
-    CONSTRAINT pk_Sectors PRIMARY KEY (Sector_ID)
+CREATE OR REPLACE TYPE InstallationType_VARRAY AS VARRAY(5) OF (InstallationType_Obj);
+/
+CREATE OR REPLACE TYPE Sector_Table AS TABLE OF Sector_Obj;
+/
+
+CREATE OR REPLACE TYPE Installation_Obj AS OBJECT (
+    Installation_ID NUMBER(10),
+    Type InstallationType_Obj,
+    Name VARCHAR2(255)
 );
+/
+CREATE TABLE Installations (
+    Installation Installation_Obj,
+    Sector_Table_varname Sector_Table
+) NESTED TABLE Sector_Table_varname STORE AS Sector_NT_Store;
+/
 
 CREATE TABLE PartsInternalCodes (
     Part_ID NUMBER(10), --DEFAULT seq_PartsInternalCodes.NEXTVAL,
@@ -83,22 +96,12 @@ CREATE TABLE Staff (
     CONSTRAINT fk_Staff_Specialities FOREIGN KEY (Speciality_ID) REFERENCES Specialities(Speciality_ID)
 );
 
-CREATE TABLE Installations (
-    Installation_ID NUMBER(10) DEFAULT seq_Installations.NEXTVAL,
-    Sector_ID NUMBER(10) NOT NULL,
-    Type_ID NUMBER(10) NOT NULL,
-    Name VARCHAR2(255) NOT NULL,
-    CONSTRAINT pk_Installations PRIMARY KEY (Installation_ID),
-    CONSTRAINT fk_Installations_Sectors FOREIGN KEY (Sector_ID) REFERENCES Sectors(Sector_ID),
-    CONSTRAINT fk_Installations_InstallationTypes FOREIGN KEY (Type_ID) REFERENCES InstallationTypes(Type_ID)
-);
-
 CREATE TABLE PartsUsage (
     Installation_ID NUMBER(10) DEFAULT seq_PartsUsage.NEXTVAL,
     Part_ID NUMBER(10) DEFAULT seq_PartsUsage.NEXTVAL,
     Internal_ID NUMBER(10) DEFAULT seq_PartsUsage.NEXTVAL,
     CONSTRAINT pk_PartsUsage PRIMARY KEY (Installation_ID, Part_ID, Internal_ID),
-    CONSTRAINT fk_PartsUsage_Installations FOREIGN KEY (Installation_ID) REFERENCES Installations(Installation_ID),
+    --CONSTRAINT fk_PartsUsage_Installations FOREIGN KEY (Installation_ID) REFERENCES Installations(Installation_ID),
     CONSTRAINT fk_PartsUsage_PartsInternalCodes FOREIGN KEY (Part_ID, Internal_ID) REFERENCES PartsInternalCodes(Part_ID, Internal_ID)
 );
 
@@ -126,3 +129,5 @@ CREATE TABLE DamagedParts (
 ) ORGANIZATION INDEX;
 
 
+-- select Treat(Treat(installation as Installation_Obj).Type as InstallationType_Obj).Name from Installations;
+-- select Treat(Treat(installation as Installation_Obj).Type as InstallationType_Obj).Type_ID from Installations;
