@@ -62,6 +62,9 @@ CREATE OR REPLACE TYPE Installation_Obj AS OBJECT (
     Name VARCHAR2(255)
 );
 /
+CREATE OR REPLACE TYPE installation_table AS TABLE OF installation_obj;
+/
+
 CREATE TABLE Installations (
     Installation Installation_Obj,
     Sector_Table_varname Sector_Table
@@ -131,3 +134,14 @@ CREATE TABLE DamagedParts (
 
 -- select Treat(Treat(installation as Installation_Obj).Type as InstallationType_Obj).Name from Installations;
 -- select Treat(Treat(installation as Installation_Obj).Type as InstallationType_Obj).Type_ID from Installations;
+
+-- select Treat(installation as Installation_Obj).Installation_ID, 
+--     Treat(Treat(installation as Installation_Obj).type as InstallationType_Obj).Name, 
+--     Treat(installation as Installation_Obj).Name
+-- from Installations;
+
+-- select Count(*) from Installations;
+
+-- select t.*
+-- from   Installations p,
+-- table (p.SECTOR_TABLE_VARNAME) t;

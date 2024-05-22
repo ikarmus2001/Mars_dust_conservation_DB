@@ -1,13 +1,77 @@
-INSERT INTO InstallationTypes (Name) VALUES ('Research');
-INSERT INTO InstallationTypes (Name) VALUES ('Habitat');
-INSERT INTO InstallationTypes (Name) VALUES ('Power Station');
-INSERT INTO InstallationTypes (Name) VALUES ('Greenhouse');
-INSERT INTO InstallationTypes (Name) VALUES ('Life Support');
-INSERT INTO InstallationTypes (Name) VALUES ('Communications');
-INSERT INTO InstallationTypes (Name) VALUES ('Storage Facility');
-INSERT INTO InstallationTypes (Name) VALUES ('Medical Center');
-INSERT INTO InstallationTypes (Name) VALUES ('Laboratory');
-INSERT INTO InstallationTypes (Name) VALUES ('Maintenance Facility');
+DECLARE
+    sector_table_var Sector_Table := Sector_Table();
+	tmp_sector sector_obj;
+
+    type_1 InstallationType_Obj := InstallationType_Obj(1, 'Research');
+    type_2 InstallationType_Obj := InstallationType_Obj(2, 'Habitat');
+    type_3 InstallationType_Obj := InstallationType_Obj(3, 'Power Station');
+    type_4 InstallationType_Obj := InstallationType_Obj(4, 'Greenhouse');
+    type_5 InstallationType_Obj := InstallationType_Obj(5, 'Life Support');
+    type_6 InstallationType_Obj := InstallationType_Obj(6, 'Communications');
+    type_7 InstallationType_Obj := InstallationType_Obj(7, 'Storage Facility');
+    type_8 InstallationType_Obj := InstallationType_Obj(8, 'Medical Center');
+    type_9 InstallationType_Obj := InstallationType_Obj(9, 'Laboratory');
+    type_10 InstallationType_Obj := InstallationType_Obj(10, 'Maintenance Facility');
+
+
+    installation_table_var installation_table := installation_table();
+BEGIN
+    sector_table_var.EXTEND(19);
+    sector_table_var(1) := Sector_Obj(1, 45.75, 30.50, 120.25, 100.00);
+    sector_table_var(2) := Sector_Obj(2, 35.00, 20.25, 95.75, 80.50);
+    sector_table_var(3) := Sector_Obj(3, 25.50, 10.00, 85.25, 70.00);
+    sector_table_var(4) := Sector_Obj(4, 15.75, 5.50, 75.00, 60.25);
+    sector_table_var(5) := Sector_Obj(5, 5.00, -5.25, 65.75, 50.50);
+    sector_table_var(6) := Sector_Obj(6, -5.50, -15.75, 55.25, 40.00);
+    sector_table_var(7) := Sector_Obj(7, -15.75, -25.50, 45.00, 30.25);
+    sector_table_var(8) := Sector_Obj(8, -25.50, -35.00, 35.25, 20.00);
+    sector_table_var(9) := Sector_Obj(9, -35.25, -45.75, 25.00, 10.25);
+    sector_table_var(10) := Sector_Obj(10, -45.75, -55.25, 15.25, 0.00);
+    sector_table_var(11) := Sector_Obj(11, -55.50, -65.75, 5.00, -10.25);
+    sector_table_var(12) := Sector_Obj(12, -65.75, -75.50, -5.25, -20.00);
+    sector_table_var(13) := Sector_Obj(13, -75.50, -85.00, -15.00, -30.25);
+    sector_table_var(14) := Sector_Obj(14, -85.25, -90.00, -25.25, -40.00);
+    sector_table_var(15) := Sector_Obj(15, -90.00, -95.50, -35.00, -50.25);
+    sector_table_var(16) := Sector_Obj(16, -95.50, -100.00, -45.25, -60.00);
+    sector_table_var(17) := Sector_Obj(17, -100.25, -105.75, -55.00, -70.25);
+    sector_table_var(18) := Sector_Obj(18, -105.75, -110.50, -65.25, -80.00);
+    sector_table_var(19) := Sector_Obj(19, -110.50, -115.00, -75.00, -90.25);
+
+    installation_table_var.EXTEND(19);
+    installation_table_var(1) := Installation_Obj(1, type_1, 'Mars Research Outpost 1');
+    installation_table_var(2) := Installation_Obj(2, type_2, 'Mars Habitat Dome 1');
+    installation_table_var(3) := Installation_Obj(3, type_3, 'Mars Power Station Alpha');
+    installation_table_var(4) := Installation_Obj(4, type_4, 'Mars Greenhouse Complex');
+    installation_table_var(5) := Installation_Obj(5, type_5, 'Mars Life Support Facility');
+    installation_table_var(6) := Installation_Obj(6, type_6, 'Mars Communications Hub');
+    installation_table_var(7) := Installation_Obj(7, type_7, 'Mars Storage Depot');
+    installation_table_var(8) := Installation_Obj(8, type_8, 'Mars Medical Center');
+    installation_table_var(9) := Installation_Obj(9, type_9, 'Mars Laboratory Complex');
+    installation_table_var(10) := Installation_Obj(10, type_10, 'Mars Maintenance Base');
+    installation_table_var(11) := Installation_Obj(11, type_1, 'Mars Research Outpost 2');
+    installation_table_var(12) := Installation_Obj(12, type_2, 'Mars Habitat Dome 2');
+    installation_table_var(13) := Installation_Obj(13, type_3, 'Mars Power Station Beta');
+    installation_table_var(14) := Installation_Obj(14, type_4, 'Mars Greenhouse Complex B');
+    installation_table_var(15) := Installation_Obj(15, type_5, 'Mars Life Support Facility 2');
+    installation_table_var(16) := Installation_Obj(16, type_6, 'Mars Communications Relay');
+    installation_table_var(17) := Installation_Obj(17, type_7, 'Mars Storage Depot 2');
+    installation_table_var(18) := Installation_Obj(18, type_8, 'Mars Medical Center B');
+    installation_table_var(19) := Installation_Obj(19, type_9, 'Mars Laboratory Complex 2');
+
+	-- INSERT INTO Installations VALUES (
+ --            installation_table_var(1),
+ --        	sector_table_var
+ --        );
+
+    FOR i IN 1..installation_table_var.last 
+    LOOP
+        INSERT INTO Installations VALUES (
+            installation_table_var(i),
+        	sector_table_var
+        );
+    end loop;
+END;
+
 
 INSERT INTO Storms VALUES (DEFAULT, 29, 'B01', 1, 120.900, 28.8500, 76.9500, 90356.984, 'B01_001', NULL, 83.2500, 71.3500, 75, 0);
 INSERT INTO Storms VALUES (DEFAULT, 29, 'B01', 2, 121.400, 29.6500, 74.2500, 156925.09, 'B01_001', NULL, 81.9500, 66.8500, 50, 0);
@@ -166,26 +230,6 @@ INSERT INTO Staff (Name, Surname, Speciality_ID, Traits) VALUES ('Jacob', 'Wilso
 INSERT INTO Staff (Name, Surname, Speciality_ID, Traits) VALUES ('Amelia', 'Perez', 8, 'Detail-oriented, Problem Solver');
 INSERT INTO Staff (Name, Surname, Speciality_ID, Traits) VALUES ('Daniel', 'Sanchez', 9, 'Innovative, Crisis Management');
 INSERT INTO Staff (Name, Surname, Speciality_ID, Traits) VALUES ('Elizabeth', 'Smith', 10, 'Organized, Analytical');
-
-INSERT INTO Installations (Sector_ID, Type_ID, Name) VALUES (1, 1, 'Mars Research Outpost 1');
-INSERT INTO Installations (Sector_ID, Type_ID, Name) VALUES (2, 2, 'Mars Habitat Dome 1');
-INSERT INTO Installations (Sector_ID, Type_ID, Name) VALUES (3, 3, 'Mars Power Station Alpha');
-INSERT INTO Installations (Sector_ID, Type_ID, Name) VALUES (4, 4, 'Mars Greenhouse Complex');
-INSERT INTO Installations (Sector_ID, Type_ID, Name) VALUES (5, 5, 'Mars Life Support Facility');
-INSERT INTO Installations (Sector_ID, Type_ID, Name) VALUES (6, 6, 'Mars Communications Hub');
-INSERT INTO Installations (Sector_ID, Type_ID, Name) VALUES (7, 7, 'Mars Storage Depot');
-INSERT INTO Installations (Sector_ID, Type_ID, Name) VALUES (8, 8, 'Mars Medical Center');
-INSERT INTO Installations (Sector_ID, Type_ID, Name) VALUES (9, 9, 'Mars Laboratory Complex');
-INSERT INTO Installations (Sector_ID, Type_ID, Name) VALUES (10, 10, 'Mars Maintenance Base');
-INSERT INTO Installations (Sector_ID, Type_ID, Name) VALUES (11, 1, 'Mars Research Outpost 2');
-INSERT INTO Installations (Sector_ID, Type_ID, Name) VALUES (12, 2, 'Mars Habitat Dome 2');
-INSERT INTO Installations (Sector_ID, Type_ID, Name) VALUES (13, 3, 'Mars Power Station Beta');
-INSERT INTO Installations (Sector_ID, Type_ID, Name) VALUES (14, 4, 'Mars Greenhouse Complex B');
-INSERT INTO Installations (Sector_ID, Type_ID, Name) VALUES (15, 5, 'Mars Life Support Facility 2');
-INSERT INTO Installations (Sector_ID, Type_ID, Name) VALUES (16, 6, 'Mars Communications Relay');
-INSERT INTO Installations (Sector_ID, Type_ID, Name) VALUES (17, 7, 'Mars Storage Depot 2');
-INSERT INTO Installations (Sector_ID, Type_ID, Name) VALUES (18, 8, 'Mars Medical Center B');
-INSERT INTO Installations (Sector_ID, Type_ID, Name) VALUES (19, 9, 'Mars Laboratory Complex 2');
 
 INSERT INTO PartsUsage (Installation_ID, Part_ID, Internal_ID) VALUES (1, 1, 1001);
 INSERT INTO PartsUsage (Installation_ID, Part_ID, Internal_ID) VALUES (2, 2, 1002);
