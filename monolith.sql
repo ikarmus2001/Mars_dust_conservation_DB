@@ -127,18 +127,18 @@ SELECT DISTINCT s.*
 FROM Staff s
 JOIN DamagedParts dp ON s.Staff_ID = dp.Cause_ID;
 
-CREATE VIEW InstallationTypeCounts AS
-SELECT s.Sector_ID,
-       s.MaxLatitude,
-       s.MinLatitude,
-       s.MaxLongitude,
-       s.MinLongitude,
-       it.Name AS InstallationType,
-       COUNT(*) AS Count
-FROM Installations i
-JOIN InstallationTypes it ON i.Type_ID = it.Type_ID
-JOIN Sectors s ON i.Sector_ID = s.Sector_ID
-GROUP BY s.Sector_ID, s.MaxLatitude, s.MinLatitude, s.MaxLongitude, s.MinLongitude, it.Name;
+-- CREATE VIEW InstallationTypeCounts AS
+-- SELECT s.Sector_ID,
+--        s.MaxLatitude,
+--        s.MinLatitude,
+--        s.MaxLongitude,
+--        s.MinLongitude,
+--        it.Name AS InstallationType,
+--        COUNT(*) AS Count
+-- FROM Installations i
+-- JOIN InstallationTypes it ON i.Type_ID = it.Type_ID
+-- JOIN Sectors s ON i.Sector_ID = s.Sector_ID
+-- GROUP BY s.Sector_ID, s.MaxLatitude, s.MinLatitude, s.MaxLongitude, s.MinLongitude, it.Name;
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 DECLARE
@@ -458,14 +458,16 @@ END Get_sol_report;
 /
 
 
+
+
 CREATE OR REPLACE PACKAGE storms_package AS
 	--procedura: dodanie nowej instalacji
-    PROCEDURE add_new_installation(
-    p_installation_id IN NUMBER,
-    p_sector_id IN NUMBER,
-    p_type_id IN NUMBER,
-    p_name IN VARCHAR2
-  );
+  --   PROCEDURE add_new_installation(
+  --   p_installation_id IN NUMBER,
+  --   p_sector_id IN NUMBER,
+  --   p_type_id IN NUMBER,
+  --   p_name IN VARCHAR2
+  -- );
 
   PROCEDURE ShowDamagedPartsInfo;
 
@@ -474,7 +476,7 @@ CREATE OR REPLACE PACKAGE storms_package AS
   PROCEDURE ShowConservationSchedule;
 
 	--wyjatek rzucany przy nieudanym dodawaniu instalacji
-	INSTALLATION_ADD_ERROR EXCEPTION;
+	--INSTALLATION_ADD_ERROR EXCEPTION;
 
 	--funkcja: zwraca liczbe burz w roku podanym jako parametr
 	FUNCTION get_storm_in_year_count(
@@ -489,20 +491,21 @@ CREATE OR REPLACE PACKAGE storms_package AS
 END storms_package;
 
 /
+
 CREATE OR REPLACE PACKAGE BODY storms_package AS
 
   PROCEDURE ShowDamagedPartsInfo
   AS
       CURSOR damaged_parts_cursor IS (
-          SELECT pec.Name as PartName, i.Name AS InstallationName
+          SELECT pec.Name as PartName, i.Installation.Name AS InstallationName
           FROM DamagedParts dp
               LEFT JOIN PartsInternalCodes pic ON dp.Part_ID = pic.Part_ID AND dp.Internal_ID = pic.Internal_ID
               LEFT JOIN PartExternalCodes pec ON pic.Part_ID = pec.PartID
               LEFT JOIN PartsUsage pu ON pic.Part_ID = pu.Part_ID AND pic.Internal_ID = pu.Internal_ID
-              LEFT JOIN Installations i ON pu.Installation_ID = i.Installation_ID
+              LEFT JOIN Installations i ON pu.Installation_ID = i.Installation.Installation_ID
       );
     PartName PartExternalCodes.Name%TYPE;
-    InstallationName Installations.Name%TYPE;
+    InstallationName Installations.Installation.Name%TYPE;
   BEGIN
       OPEN damaged_parts_cursor;
       LOOP
@@ -513,19 +516,21 @@ CREATE OR REPLACE PACKAGE BODY storms_package AS
       CLOSE damaged_parts_cursor;
   END;
 
+
+
+
   PROCEDURE ShowInstallationsInfo
   AS
   BEGIN
       FOR installation_record IN (
-          SELECT i.Name AS InstallationName, it.Name AS TypeName, s.Sector_ID
-          FROM Installations i, InstallationTypes it, Sectors s
-          WHERE i.Type_ID = it.Type_ID(+)
-              AND i.Sector_ID = s.Sector_ID(+)
+          SELECT i.Installation.Name AS InstallationName, i.Installation.Type.Name AS TypeName
+          FROM Installations i
       )
       LOOP
-          DBMS_OUTPUT.PUT_LINE('Installation: ' || installation_record.InstallationName || ', Type: ' || installation_record.TypeName || ', Sector: ' || installation_record.Sector_ID);
+          DBMS_OUTPUT.PUT_LINE('Installation: ' || installation_record.InstallationName || ', Type: ' || installation_record.TypeName);
       END LOOP;
   END;
+
 
   PROCEDURE ShowConservationSchedule
   AS
@@ -541,23 +546,25 @@ CREATE OR REPLACE PACKAGE BODY storms_package AS
       END LOOP;
   END;
 
+
+
   -- Procedura dodająca nowy wiatr do tabeli wiatrów
-  PROCEDURE add_new_installation(
-    p_installation_id IN NUMBER,
-    p_sector_id IN NUMBER,
-    p_type_id IN NUMBER,
-    p_name IN VARCHAR2
-  ) IS
-  BEGIN
-    INSERT INTO installations (installation_id, sector_id, type_id, name)
-    VALUES (p_installation_id, p_sector_id, p_type_id, p_name);
+--   PROCEDURE add_new_installation(
+--     p_installation_id IN NUMBER,
+--     p_sector_id IN NUMBER,
+--     p_type_id IN NUMBER,
+--     p_name IN VARCHAR2
+--   ) IS
+--   BEGIN
+--     INSERT INTO installations (installation_id, sector_id, type_id, name)
+--     VALUES (p_installation_id, p_sector_id, p_type_id, p_name);
     
-    COMMIT;
+--     COMMIT;
 
-EXCEPTION
-    WHEN OTHERS THEN RAISE INSTALLATION_ADD_ERROR;
+-- EXCEPTION
+--     WHEN OTHERS THEN RAISE INSTALLATION_ADD_ERROR;
 
-END add_new_installation;
+-- END add_new_installation;
 
 FUNCTION get_storm_in_year_count(
     p_mars_year IN NUMBER
@@ -587,11 +594,11 @@ FUNCTION get_storms_in_sol_list(
 END storms_package;
 /
 
-BEGIN storms_package.add_new_installation(20, 5, 5, 'Mars Water Bank');
-COMMIT;
-EXCEPTION WHEN storms_package.INSTALLATION_ADD_ERROR THEN DBMS_OUTPUT.PUT_LINE('Wystapil blad przy dodawaniu instalacji.');
-END;
-/
+-- BEGIN storms_package.add_new_installation(20, 5, 5, 'Mars Water Bank');
+-- COMMIT;
+-- EXCEPTION WHEN storms_package.INSTALLATION_ADD_ERROR THEN DBMS_OUTPUT.PUT_LINE('Wystapil blad przy dodawaniu instalacji.');
+-- END;
+-- /
 
 DECLARE v_storms_in_year_29 NUMBER;
 BEGIN v_storms_in_year_29 := storms_package.get_storm_in_year_count(29);
@@ -630,7 +637,7 @@ BEGIN
   CLOSE v_sol_cursor;
 END;
 
-
+/
 
 --Trigger pozwalajacy na sprawdzenie, czy imie i nazwisko personelu jest pisane z duzej litery.
 --Umozliwia pobieranie nowego ID z sekwencji seq_Staff.
@@ -660,29 +667,29 @@ END;
 
 --Trigger umozliwiajacy edycje pola Type_ID tabeli InstallationTypes
 --poprzez perspektywe InstallatioTypeCounts
-CREATE OR REPLACE TRIGGER instead_of_modify_InstallationTypeCounts
-INSTEAD OF UPDATE ON InstallationTypeCounts
-FOR EACH ROW
-BEGIN
-    UPDATE InstallationTypes
-    SET Name = (
-        SELECT :NEW.InstallationType
-        FROM dual
-    )
-    WHERE Type_ID = (
-        SELECT Type_ID
-        FROM InstallationTypes
-        WHERE Name = :OLD.InstallationType
-    );
-END;
-/
+-- CREATE OR REPLACE TRIGGER instead_of_modify_InstallationTypeCounts
+-- INSTEAD OF UPDATE ON InstallationTypeCounts
+-- FOR EACH ROW
+-- BEGIN
+--     UPDATE InstallationTypes
+--     SET Name = (
+--         SELECT :NEW.InstallationType
+--         FROM dual
+--     )
+--     WHERE Type_ID = (
+--         SELECT Type_ID
+--         FROM InstallationTypes
+--         WHERE Name = :OLD.InstallationType
+--     );
+-- END;
+--/
 
 begin
   ShowDamagedPartsInfo();
 	ShowInstallationsInfo();
   ShowConservationSchedule();
 end;
-
+/
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 select Treat(Treat(installation as Installation_Obj).Type as InstallationType_Obj).Name from Installations;
