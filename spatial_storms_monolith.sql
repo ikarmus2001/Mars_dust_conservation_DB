@@ -30,10 +30,7 @@ CREATE OR REPLACE TYPE InstallationType_Obj AS OBJECT (
     
 CREATE OR REPLACE TYPE Sector_Obj AS OBJECT(
     Sector_ID NUMBER(10),
-    MaxLatitude NUMBER(10),
-    MinLatitude NUMBER(10),
-    MaxLongitude NUMBER(10),
-    MinLongitude NUMBER(10)
+    Sector_Rectangle SDO_GEOMETRY
 );
 /
 
@@ -157,25 +154,25 @@ DECLARE
     installation_table_var installation_table := installation_table();
 BEGIN
     sector_table_var.EXTEND(19);
-    sector_table_var(1) := Sector_Obj(1, 45.75, 30.50, 120.25, 100.00);
-    sector_table_var(2) := Sector_Obj(2, 35.00, 20.25, 95.75, 80.50);
-    sector_table_var(3) := Sector_Obj(3, 25.50, 10.00, 85.25, 70.00);
-    sector_table_var(4) := Sector_Obj(4, 15.75, 5.50, 75.00, 60.25);
-    sector_table_var(5) := Sector_Obj(5, 5.00, -5.25, 65.75, 50.50);
-    sector_table_var(6) := Sector_Obj(6, -5.50, -15.75, 55.25, 40.00);
-    sector_table_var(7) := Sector_Obj(7, -15.75, -25.50, 45.00, 30.25);
-    sector_table_var(8) := Sector_Obj(8, -25.50, -35.00, 35.25, 20.00);
-    sector_table_var(9) := Sector_Obj(9, -35.25, -45.75, 25.00, 10.25);
-    sector_table_var(10) := Sector_Obj(10, -45.75, -55.25, 15.25, 0.00);
-    sector_table_var(11) := Sector_Obj(11, -55.50, -65.75, 5.00, -10.25);
-    sector_table_var(12) := Sector_Obj(12, -65.75, -75.50, -5.25, -20.00);
-    sector_table_var(13) := Sector_Obj(13, -75.50, -85.00, -15.00, -30.25);
-    sector_table_var(14) := Sector_Obj(14, -85.25, -90.00, -25.25, -40.00);
-    sector_table_var(15) := Sector_Obj(15, -90.00, -95.50, -35.00, -50.25);
-    sector_table_var(16) := Sector_Obj(16, -95.50, -100.00, -45.25, -60.00);
-    sector_table_var(17) := Sector_Obj(17, -100.25, -105.75, -55.00, -70.25);
-    sector_table_var(18) := Sector_Obj(18, -105.75, -110.50, -65.25, -80.00);
-    sector_table_var(19) := Sector_Obj(19, -110.50, -115.00, -75.00, -90.25);
+    sector_table_var(1)     := Sector_Obj(1, SDO_GEOMETRY(2002,NULL,NULL,SDO_ELEM_INFO_ARRAY(1, 2, 1),SDO_ORDINATE_ARRAY(45.75, 30.5, 120.25, 100.0)));
+    sector_table_var(2)     := Sector_Obj(2, SDO_GEOMETRY(2002,NULL,NULL,SDO_ELEM_INFO_ARRAY(1, 2, 1),SDO_ORDINATE_ARRAY(35.0, 20.25, 95.75, 80.5)));
+    sector_table_var(3)     := Sector_Obj(3, SDO_GEOMETRY(2002,NULL,NULL,SDO_ELEM_INFO_ARRAY(1, 2, 1),SDO_ORDINATE_ARRAY(25.5, 10.0, 85.25, 70.0)));
+    sector_table_var(4)     := Sector_Obj(4, SDO_GEOMETRY(2002,NULL,NULL,SDO_ELEM_INFO_ARRAY(1, 2, 1),SDO_ORDINATE_ARRAY(15.75, 5.5, 75.0, 60.25)));
+    sector_table_var(5)     := Sector_Obj(5, SDO_GEOMETRY(2002,NULL,NULL,SDO_ELEM_INFO_ARRAY(1, 2, 1),SDO_ORDINATE_ARRAY(5.0, -5.25, 65.75, 50.5)));
+    sector_table_var(6)     := Sector_Obj(6, SDO_GEOMETRY(2002,NULL,NULL,SDO_ELEM_INFO_ARRAY(1, 2, 1),SDO_ORDINATE_ARRAY(-5.5, -15.75, 55.25, 40.0)));
+    sector_table_var(7)     := Sector_Obj(7, SDO_GEOMETRY(2002,NULL,NULL,SDO_ELEM_INFO_ARRAY(1, 2, 1),SDO_ORDINATE_ARRAY(-15.75, -25.5, 45.0, 30.25)));
+    sector_table_var(8)     := Sector_Obj(8, SDO_GEOMETRY(2002,NULL,NULL,SDO_ELEM_INFO_ARRAY(1, 2, 1),SDO_ORDINATE_ARRAY(-25.5, -35.0, 35.25, 20.0)));
+    sector_table_var(9)     := Sector_Obj(9, SDO_GEOMETRY(2002,NULL,NULL,SDO_ELEM_INFO_ARRAY(1, 2, 1),SDO_ORDINATE_ARRAY(-35.25, -45.75, 25.0, 10.25)));
+    sector_table_var(10)    := Sector_Obj(10, SDO_GEOMETRY(2002,NULL,NULL,SDO_ELEM_INFO_ARRAY(1, 2, 1),SDO_ORDINATE_ARRAY(-45.75, -55.25, 15.25, 0.0)));
+    sector_table_var(11)    := Sector_Obj(11, SDO_GEOMETRY(2002,NULL,NULL,SDO_ELEM_INFO_ARRAY(1, 2, 1),SDO_ORDINATE_ARRAY(-55.5, -65.75, 5.0, -10.25)));
+    sector_table_var(12)    := Sector_Obj(12, SDO_GEOMETRY(2002,NULL,NULL,SDO_ELEM_INFO_ARRAY(1, 2, 1),SDO_ORDINATE_ARRAY(-65.75, -75.5, -5.25, -20.0)));
+    sector_table_var(13)    := Sector_Obj(13, SDO_GEOMETRY(2002,NULL,NULL,SDO_ELEM_INFO_ARRAY(1, 2, 1),SDO_ORDINATE_ARRAY(-75.5, -85.0, -15.0, -30.25)));
+    sector_table_var(14)    := Sector_Obj(14, SDO_GEOMETRY(2002,NULL,NULL,SDO_ELEM_INFO_ARRAY(1, 2, 1),SDO_ORDINATE_ARRAY(-85.25, -90.0, -25.25, -40.0)));
+    sector_table_var(15)    := Sector_Obj(15, SDO_GEOMETRY(2002,NULL,NULL,SDO_ELEM_INFO_ARRAY(1, 2, 1),SDO_ORDINATE_ARRAY(-90.0, -95.5, -35.0, -50.25)));
+    sector_table_var(16)    := Sector_Obj(16, SDO_GEOMETRY(2002,NULL,NULL,SDO_ELEM_INFO_ARRAY(1, 2, 1),SDO_ORDINATE_ARRAY(-95.5, -100.0, -45.25, -60.0)));
+    sector_table_var(17)    := Sector_Obj(17, SDO_GEOMETRY(2002,NULL,NULL,SDO_ELEM_INFO_ARRAY(1, 2, 1),SDO_ORDINATE_ARRAY(-100.25, -105.75, -55.0, -70.25)));
+    sector_table_var(18)    := Sector_Obj(18, SDO_GEOMETRY(2002,NULL,NULL,SDO_ELEM_INFO_ARRAY(1, 2, 1),SDO_ORDINATE_ARRAY(-105.75, -110.5, -65.25, -80.0)));
+    sector_table_var(19)    := Sector_Obj(19, SDO_GEOMETRY(2002,NULL,NULL,SDO_ELEM_INFO_ARRAY(1, 2, 1),SDO_ORDINATE_ARRAY(-110.5, -115.0, -75.0, -90.25)));
 
     installation_table_var.EXTEND(19);
     installation_table_var(1) := Installation_Obj(1, type_1, 'Mars Research Outpost 1');
@@ -207,9 +204,9 @@ BEGIN
     LOOP
         INSERT INTO Installations VALUES (
             installation_table_var(i),
-        	sector_table_var
+        	sector_table(sector_table_var(i))
         );
-    end loop;
+    END LOOP;
 END;
 /
 
@@ -472,6 +469,8 @@ CREATE OR REPLACE PACKAGE storms_package AS
 
   PROCEDURE ShowConservationSchedule;
 
+  PROCEDURE UpdateStormImpact;
+
 	--wyjatek rzucany przy nieudanym dodawaniu instalacji
 	--INSTALLATION_ADD_ERROR EXCEPTION;
 
@@ -543,6 +542,39 @@ CREATE OR REPLACE PACKAGE BODY storms_package AS
       END LOOP;
   END;
 
+    PROCEDURE UpdateStormImpact (storm_id IN Storms.Storm_ID%TYPE) AS 
+        tmp_sectors Sector_Table;
+        pu_hack PartsInternalCodes%ROWTYPE;
+    BEGIN
+-- TODO
+        SELECT s.Sector_Rectangle
+        BULK COLLECT INTO tmp_sectors
+        FROM Installations i, TABLE(i.Sector_Table_varname) s
+        WHERE SDO_GEOM.Relate(s.Sector_Rectangle, 'anyinteract', (select LatitudeRange from storms WHERE storm_id = 1), 0.005) <> 'FALSE';
+
+        SELECT part_id, internal_id
+        BULK COLLECT INTO pu_hack
+        FROM Installations 
+            LEFT JOIN PartsUsage ON Installations.Installation_ID = PartsUsage.Installation_ID
+        WHERE Installation.Sector IN (SELECT COLUMN_VALUE FROM TABLE(tmp_sectors));
+
+        FOR i IN 1..pu_hack.COUNT LOOP
+        BEGIN
+            INSERT INTO DamagedParts (Part_ID, Internal_ID, PresumptedOrReported, Cause_ID) 
+            VALUES (pu_hack(i).part_id, pu_hack(i).internal_id, 1, storm_id);
+        EXCEPTION 
+            WHEN OTHERS THEN
+                DECLARE
+                    tmp_pecName PartExternalCodes.Name%TYPE;
+                BEGIN
+                    SELECT pec.name INTO tmp_pecName 
+                    FROM PartExternalCodes pec 
+                    WHERE pec.partid = pu_hack(i).part_id;
+                    DBMS_OUTPUT.PUT_LINE('Already resolved: Skipped part ' || tmp_pecName);
+                END;
+            END;
+        END LOOP;
+    END;
 
 
   -- Procedura dodająca nowy wiatr do tabeli wiatrów
@@ -620,13 +652,10 @@ BEGIN
 	DBMS_OUTPUT.PUT_LINE('Mars year: ' || v_storm_rec.mars_year);
     DBMS_OUTPUT.PUT_LINE('Mission subphase: ' || v_storm_rec.mission_subphase);
 	DBMS_OUTPUT.PUT_LINE('Solar longitude: ' || v_storm_rec.solar_longitude_ls);
-	DBMS_OUTPUT.PUT_LINE('Centroid longitude: ' || v_storm_rec.centroid_longitude);
 	DBMS_OUTPUT.PUT_LINE('Centroid latitude: ' || v_storm_rec.centroid_latitude);
 	DBMS_OUTPUT.PUT_LINE('Area: ' || v_storm_rec.area);
 	DBMS_OUTPUT.PUT_LINE('Member ID: ' || v_storm_rec.member_id);
 	DBMS_OUTPUT.PUT_LINE('Sequence ID: ' || v_storm_rec.sequence_id);
-	DBMS_OUTPUT.PUT_LINE('Max latitude: ' || v_storm_rec.max_latitude);
-	DBMS_OUTPUT.PUT_LINE('Min latitude: ' || v_storm_rec.min_latitude);
 	DBMS_OUTPUT.PUT_LINE('Confidence interval: ' || v_storm_rec.confidence_interval);
 	DBMS_OUTPUT.PUT_LINE('Missing data: ' || v_storm_rec.missing_data);
 	DBMS_OUTPUT.PUT_LINE('---');
