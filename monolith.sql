@@ -27,7 +27,9 @@ CREATE TABLE Storms (
 
 CREATE OR REPLACE TYPE InstallationType_Obj AS OBJECT (
     Type_ID NUMBER(10),
-    Name VARCHAR2(255)
+    Name VARCHAR2(255),
+    MEMBER FUNCTION ChangeType RETURN INTEGER,
+    MEMBER PROCEDURE ToVarchar
 );
 /
     
@@ -37,7 +39,22 @@ CREATE OR REPLACE TYPE Sector_Obj AS OBJECT(
     MinLatitude NUMBER(10),
     MaxLongitude NUMBER(10),
     MinLongitude NUMBER(10)
+    MEMBER FUNCTION GetRect RETURN MDSYS.SDO_GEOMETRY
 );
+/
+
+CREATE OR REPLACE TYPE BODY Sector_Obj AS
+    MEMBER FUNCTION GetRect RETURN MDSYS.SDO_GEOMETRY IS
+    BEGIN
+        RETURN MDSYS.SDO_GEOMETRY(
+            2003,
+            NULL, 
+            NULL, 
+            MDSYS.SDO_ELEM_INFO_ARRAY(1, 1003, 3),
+            MDSYS.SDO_ORDINATE_ARRAY(MinLongitude, MinLatitude, MaxLongitude, MaxLatitude)
+        );
+    END GetRect;
+END;
 /
 
 CREATE OR REPLACE TYPE InstallationType_VARRAY AS VARRAY(5) OF (InstallationType_Obj);
@@ -705,3 +722,14 @@ select Count(*) from Installations;
 select t.*
 from   Installations p,
 table (p.SECTOR_TABLE_VARNAME) t;
+
+
+
+DECLARE
+    mySector Sector_Obj := Sector_Obj(140, 10, 15, 60, 28);
+    rect MDSYS.SDO_GEOMETRY;
+BEGIN
+    rect := mySector.GetRect();
+    DBMS_OUTPUT.PUT_LINE('Rectangle: ' || rect.SDO_ORDINATES(1) || ', ' || rect.SDO_ORDINATES(2) || ', ' || rect.SDO_ORDINATES(3) || ', ' || rect.SDO_ORDINATES(4));
+END;
+/
